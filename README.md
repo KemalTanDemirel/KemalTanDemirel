@@ -6,7 +6,7 @@
 - 🤔 I’m looking for help with Flutter front-end developer
 - ⚡ Fun fact: I love to play computer games, play chess ♟, play football ⚽
 ## ⏲ What we are doing now:
-I'm developing a project for Teknofest 🚀, I am writing on 3 sites 📃.
+I'm developing a project for Teknofest and Tübitak 🚀, I am writing on 3 sites 📃.
 I'm a developing an app with my team 👨🏼‍🤝‍👨🏻,I do ethical hacking with my team
 I also work as a FreeLancer 🆓.
 <br />
