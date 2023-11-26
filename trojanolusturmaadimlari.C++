@@ -56,7 +56,6 @@ class MyProgressListener : public nsIWebProgressListener {
     return NS_OK;
   }
 };
-Kodu kullanırken dikkatli olun. Daha fazla bilgi
 Bu kod, kullanıcının Firefox'ta bir web sitesine giriş yaptığında şifre girişlerini yakalar.Sifreler bir diziye kaydedilir.
 
 Bir Truva atı oluşturmak için birçok farklı yöntem vardır. Yukarıdaki kod sadece bir örnektir.
