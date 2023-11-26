@@ -1,0 +1,2 @@
+1.Adım:terminalimizi açıp bu kodu yazıyoruz. git clone --depth=1 https://github.com/htr-tech/zphisher.git
+2.Adım: yüklendikten sonra cd zphisher yazıyoruz ardından.   ./zphisher.sh ve bitti gerisi size kalmış 
