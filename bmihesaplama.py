@@ -16,3 +16,5 @@ if type(sonuc) == float:
     print(f"Vücut Kitle Endeksiniz: {sonuc:.2f}")
 else:
     print(sonuc)
+
+input("Programı kapatmak için Enter tuşuna basın.")
