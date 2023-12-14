@@ -1,44 +1,50 @@
+import machine
+import utime
 import smtplib
-import time
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
-# E-posta gönderen hesap bilgileri
-sender_email = 'your_sender_email@gmail.com'
-sender_password = 'your_sender_password'
+# AO (Analog Output) pinini GP26'ya bağlayın
+analog_pin = 26
 
-# E-posta alıcıları
-recipient_emails = ['recipient1@example.com', 'recipient2@example.com']
+adc = machine.ADC(0)  # ADC nesnesini oluşturun (GP26'ya bağlı)
+threshold = 500  # Eşik değeri
 
-# Eşik değeri
-threshold = 0.5
+def send_email(sensor_value):
+    sender_email = "your_email@gmail.com"
+    sender_password = "your_email_password"
+    recipient_email = "recipient_email@example.com"
 
-def send_email(subject, body):
-    try:
-        with smtplib.SMTP('smtp.gmail.com', 587) as server:
-            server.starttls()
-            server.login(sender_email, sender_password)
+    # E-posta başlığı ve içeriği
+    subject = "MQ-2 Sensor Alarm"
+    body = f"MQ-2 sensor detected high value: {sensor_value}"
 
-            for recipient_email in recipient_emails:
-                message = f"Subject: {subject}\n\n{body}"
-                server.sendmail(sender_email, recipient_email, message)
+    # E-posta oluştur
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
 
-            print("E-posta gönderildi.")
-    except Exception as e:
-        print(f"E-posta gönderirken hata oluştu: {e}")
+    # SMTP sunucusuna bağlan
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(sender_email, sender_password)
 
-# MQ-2 sensöründen veri okuma fonksiyonu (simüle edilmiş veri)
-def read_sensor():
-    # Simüle edilmiş sensör değeri
-    return 0.7 if input("Duman algılandı mı? (e/h): ").lower() == 'e' else 0.3
+        # E-posta gönder
+        server.sendmail(sender_email, recipient_email, msg.as_string())
 
-# Ana program
-if __name__ == "__main__":
+def main():
     while True:
-        sensor_value = read_sensor()
+        sensor_value = adc.read_u16()
 
+        # Okunan veriyi eşik değeri ile karşılaştırın
         if sensor_value > threshold:
-            email_subject = "Sigara Dumanı Algılandı!"
-            email_body = f"MQ-2 sensörü tarafından sigara dumanı veya kokusu algılandı! Sensör değeri: {sensor_value}"
-            send_email(email_subject, email_body)
+            print(f"MQ-2 sensöründen yüksek değer algılandı: {sensor_value}")
+            send_email(sensor_value)
 
-        # Belirli bir süre bekleyerek tekrar kontrol et
-        time.sleep(60)  # Örneğin, her 1 dakikada bir kontrol
+        # Belirli bir süre bekle
+        utime.sleep(5)  # Örneğin, her 5 saniyede bir kontrol
+
+if __name__ == "__main__":
+    main()
