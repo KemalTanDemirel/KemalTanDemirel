@@ -10,10 +10,12 @@ analog_pin = 26
 adc = machine.ADC(0)  # ADC nesnesini oluşturun (GP26'ya bağlı)
 threshold = 500  # Eşik değeri
 
-def send_email(sensor_value):
+teachers = ["teacher1@example.com", "teacher2@example.com", "teacher3@example.com"]
+current_teacher_index = 0
+
+def send_email(sensor_value, recipient_email):
     sender_email = "your_email@gmail.com"
     sender_password = "your_email_password"
-    recipient_email = "recipient_email@example.com"
 
     # E-posta başlığı ve içeriği
     subject = "MQ-2 Sensor Alarm"
@@ -34,14 +36,21 @@ def send_email(sensor_value):
         # E-posta gönder
         server.sendmail(sender_email, recipient_email, msg.as_string())
 
+def select_teacher():
+    global current_teacher_index
+    current_teacher_email = teachers[current_teacher_index]
+    current_teacher_index = (current_teacher_index + 1) % len(teachers)
+    return current_teacher_email
+
 def main():
     while True:
         sensor_value = adc.read_u16()
 
         # Okunan veriyi eşik değeri ile karşılaştırın
         if sensor_value > threshold:
-            print(f"MQ-2 sensöründen yüksek değer algılandı: {sensor_value}")
-            send_email(sensor_value)
+            recipient_email = select_teacher()
+            print(f"MQ-2 sensöründen yüksek değer algılandı. Gönderilen öğretmen: {recipient_email}")
+            send_email(sensor_value, recipient_email)
 
         # Belirli bir süre bekle
         utime.sleep(5)  # Örneğin, her 5 saniyede bir kontrol
